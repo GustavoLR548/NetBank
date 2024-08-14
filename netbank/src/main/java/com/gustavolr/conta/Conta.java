@@ -1,31 +1,31 @@
 package com.gustavolr.conta;
 
 import com.gustavolr.cliente.Cliente;
+import com.gustavolr.factory.CredencialFactory;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@RequiredArgsConstructor
 public class Conta {
     
-    protected int agencia;
-    protected int numero;
+    private static final double SALDO_INICIAL = 1000;
+
     protected double saldo;
+    protected Credenciais credenciais;
     protected Cliente cliente;
 
+    public Conta(Cliente cliente) {
+        credenciais = CredencialFactory.generateRandom();
+        this.cliente = cliente;
+        this.saldo = SALDO_INICIAL;
+    }
+
     public boolean ehPossivelSacar(double valor) {
-        if (valor > 0 && saldo >= valor) {
-            return true;
-        } else {
-            return false;
-        }        
+        return valor > 0 && saldo >= valor;
     }
 
     public boolean sacar(double valor) {
-        if (valor > 0 && saldo >= valor) {
+        if (ehPossivelSacar(valor)) {
             saldo -= valor;
             return true;
         } else {

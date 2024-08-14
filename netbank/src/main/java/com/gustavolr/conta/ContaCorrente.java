@@ -2,34 +2,29 @@ package com.gustavolr.conta;
 
 import com.gustavolr.cliente.Cliente;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class ContaCorrente extends Conta{
     private double limiteChequeEspecial;
 
-    public ContaCorrente(int agencia, int numero, double saldo, Cliente cliente, double limiteChequeEspecial) {
-        super(agencia,numero,saldo,cliente);
+    public ContaCorrente(Cliente cliente, 
+                         double limiteChequeEspecial) {
+
+        super(cliente);
         this.limiteChequeEspecial = limiteChequeEspecial;
     }
 
     @Override
     public boolean ehPossivelSacar(double valor) {
-        if (valor > 0 && saldo + limiteChequeEspecial >= valor) {
-            saldo -= valor;
-            return true;
-        } else {
-            return false;
-        }
+        return valor > 0 && saldo + limiteChequeEspecial >= valor;
     }
 
     @Override
     public boolean sacar(double valor) {
-        if (valor > 0 && saldo + limiteChequeEspecial >= valor) {
+        if (ehPossivelSacar(valor)) {
             saldo -= valor;
             return true;
         } else {
@@ -40,7 +35,7 @@ public class ContaCorrente extends Conta{
 
     @Override
     public String toString() {
-        return "ContaCorrente [agencia=" + agencia + ", limiteChequeEspecial=" + limiteChequeEspecial + ", numero="
-                + numero + ", saldo=" + saldo + ", cliente=" + cliente + "]";
+        return "ContaCorrente [saldo=" + saldo + ", limiteChequeEspecial=" + limiteChequeEspecial + ", credenciais="
+                + credenciais + ", cliente=" + cliente + "]";
     }
 }
